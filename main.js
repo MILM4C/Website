@@ -55,39 +55,51 @@ function initializeAudio() {
 function stopAllAudio() {
     console.log("🔇 Stopping all audio...");
     
-    // Pause all audio elements
-    backgroundAudio.pause();
-    fileClickAudio.pause();
-    glitchAudio.pause();
+    // Force stop background audio completely
+    if (backgroundAudio) {
+        backgroundAudio.pause();
+        backgroundAudio.currentTime = 0;
+        backgroundAudio.volume = 0;
+    }
     
-    // Reset audio times
-    backgroundAudio.currentTime = 0;
-    fileClickAudio.currentTime = 0;
-    glitchAudio.currentTime = 0;
+    // Stop other audio elements
+    if (fileClickAudio) {
+        fileClickAudio.pause();
+        fileClickAudio.currentTime = 0;
+    }
+    
+    if (glitchAudio) {
+        glitchAudio.pause();
+        glitchAudio.currentTime = 0;
+    }
     
     // Hide audio indicator
     audioIndicator.style.display = 'none';
 }
 
 function playGlitchSequenceMusic() {
-    // Stop all other audio first
+    // Force stop ALL audio first
     stopAllAudio();
     
-    // Play the glitch music
-    glitchMusic.currentTime = 0;
-    glitchMusic.loop = true; // Make it loop
-    
-    const playPromise = glitchMusic.play();
-    
-    if (playPromise !== undefined) {
-        playPromise.then(() => {
-            console.log("🎵 Glitch music started");
-        }).catch(error => {
-            console.log("Glitch music error:", error);
-            // Fallback: play the short glitch sound
-            playGlitchSound();
-        });
-    }
+    // Small delay to ensure audio is stopped
+    setTimeout(() => {
+        // Play the glitch music
+        glitchMusic.currentTime = 0;
+        glitchMusic.volume = 0.6;
+        glitchMusic.loop = true; // Make it loop
+        
+        const playPromise = glitchMusic.play();
+        
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                console.log("🎵 Glitch music started");
+            }).catch(error => {
+                console.log("Glitch music error:", error);
+                // Fallback: play the short glitch sound
+                playGlitchSound();
+            });
+        }
+    }, 100);
 }
 
 function playFileClickSound() {
@@ -95,6 +107,8 @@ function playFileClickSound() {
     if (glitchOverlay.classList.contains('glitch-active')) return;
     
     fileClickAudio.currentTime = 0;
+    fileClickAudio.volume = 0.3;
+    
     const playPromise = fileClickAudio.play();
     
     if (playPromise !== undefined) {
@@ -111,6 +125,8 @@ function playFileClickSound() {
 
 function playGlitchSound() {
     glitchAudio.currentTime = 0;
+    glitchAudio.volume = 0.8;
+    
     const playPromise = glitchAudio.play();
     
     if (playPromise !== undefined) {
@@ -125,6 +141,10 @@ function playGlitchSound() {
 function startBackgroundAudio() {
     // Don't start if glitch is active
     if (glitchOverlay.classList.contains('glitch-active')) return;
+    
+    backgroundAudio.currentTime = 0;
+    backgroundAudio.volume = 0.4;
+    backgroundAudio.loop = true;
     
     const playPromise = backgroundAudio.play();
     
@@ -211,6 +231,7 @@ function fadeOutAudio(audioElement, duration) {
         } else {
             audioElement.volume = 0;
             audioElement.pause();
+            audioElement.currentTime = 0;
             clearInterval(fadeInterval);
         }
     }, interval);
@@ -222,13 +243,20 @@ function triggerGlitchEffect() {
     // Reset message index
     currentMessageIndex = 0;
     
+    // IMMEDIATELY stop background audio before anything else
+    if (backgroundAudio) {
+        backgroundAudio.pause();
+        backgroundAudio.currentTime = 0;
+        backgroundAudio.volume = 0;
+    }
+    
     // Play initial glitch sound
     playGlitchSound();
     
-    // Start glitch music
+    // Start glitch music immediately after stopping background
     setTimeout(() => {
         playGlitchSequenceMusic();
-    }, 500);
+    }, 100);
     
     // Start the glitch sequence
     setTimeout(() => {
@@ -250,6 +278,12 @@ function triggerGlitchEffect() {
                     
                     // Show glitch overlay
                     glitchOverlay.classList.add('glitch-active');
+                    
+                    // Double-check background audio is stopped
+                    if (backgroundAudio) {
+                        backgroundAudio.pause();
+                        backgroundAudio.currentTime = 0;
+                    }
                     
                     // Start message sequence after overlay is shown
                     setTimeout(() => {
@@ -392,7 +426,7 @@ function renderFiles(filesToRender) {
     });
 }
 
-// ==================== EVENT LISTENERS ====================
+/// ==================== EVENT LISTENERS ====================
 
 function setupEventListeners() {
     // Category filter event listeners
@@ -448,20 +482,21 @@ function setupEventListeners() {
     });
 
     // Audio interaction listeners - only if glitch is not active
+    // AND only if background audio is not already playing
     document.addEventListener('click', function() {
-        if (!glitchOverlay.classList.contains('glitch-active')) {
+        if (!glitchOverlay.classList.contains('glitch-active') && backgroundAudio.paused) {
             startBackgroundAudio();
         }
     });
     
     document.addEventListener('keydown', function() {
-        if (!glitchOverlay.classList.contains('glitch-active')) {
+        if (!glitchOverlay.classList.contains('glitch-active') && backgroundAudio.paused) {
             startBackgroundAudio();
         }
     });
     
     document.addEventListener('mousemove', function() {
-        if (!glitchOverlay.classList.contains('glitch-active')) {
+        if (!glitchOverlay.classList.contains('glitch-active') && backgroundAudio.paused) {
             startBackgroundAudio();
         }
     });
