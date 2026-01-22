@@ -3,6 +3,11 @@
 // DOM elements
 const glitchOverlay = document.getElementById('glitchOverlay');
 const glitchMessage = document.getElementById('glitchMessage');
+const cozbiGlitchOverlay = document.getElementById('cozbiGlitchOverlay');
+const cozbiGlitchMessage = document.getElementById('cozbiGlitchMessage');
+const cozbiProgressFill = document.getElementById('cozbiProgressFill');
+const ancientOverlay = document.getElementById('ancientOverlay');
+const closeAncient = document.getElementById('closeAncient');
 const mainContainer = document.getElementById('mainContainer');
 const fileContainer = document.getElementById('fileContainer');
 const categoryItems = document.querySelectorAll('.categories li');
@@ -21,6 +26,7 @@ const backgroundAudio = document.getElementById('backgroundAudio');
 const fileClickAudio = document.getElementById('fileClickAudio');
 const glitchAudio = document.getElementById('glitchAudio');
 const glitchMusic = document.getElementById('glitchMusic');
+const ancientMusic = document.getElementById('ancientMusic');
 const audioIndicator = document.getElementById('audioIndicator');
 
 // State variables
@@ -36,6 +42,15 @@ const glitchMessages = [
     "TERMINATING SESSION"
 ];
 
+// COZBI glitch messages
+const cozbiGlitchMessages = [
+    "ACCESSING GOLDEN AGE RECORDS...",
+    "COSMIC CLEARANCE VERIFIED",
+    "Dark BARRIERS BREACHED",
+    "GOLDEN AGE ACCESSED",
+    "WELCOME, CHOSEN ONE"
+];
+
 let currentMessageIndex = 0;
 let glitchInterval;
 
@@ -46,7 +61,8 @@ function initializeAudio() {
     backgroundAudio.volume = 0.4;
     fileClickAudio.volume = 0.3;
     glitchAudio.volume = 0.8;
-    glitchMusic.volume = 0.6; // Lower volume for glitch music
+    glitchMusic.volume = 0.6;
+    ancientMusic.volume = 0.4;
     
     // Try to start background audio
     startBackgroundAudio();
@@ -86,7 +102,7 @@ function playGlitchSequenceMusic() {
         // Play the glitch music
         glitchMusic.currentTime = 0;
         glitchMusic.volume = 0.6;
-        glitchMusic.loop = true; // Make it loop
+        glitchMusic.loop = true;
         
         const playPromise = glitchMusic.play();
         
@@ -102,9 +118,38 @@ function playGlitchSequenceMusic() {
     }, 100);
 }
 
+function playAncientMusic() {
+    // Stop all other audio
+    if (backgroundAudio) {
+        backgroundAudio.pause();
+        backgroundAudio.currentTime = 0;
+    }
+    if (glitchMusic) {
+        glitchMusic.pause();
+        glitchMusic.currentTime = 0;
+    }
+    
+    // Play ancient music
+    ancientMusic.currentTime = 0;
+    ancientMusic.volume = 0.4;
+    ancientMusic.loop = true;
+    
+    const playPromise = ancientMusic.play();
+    
+    if (playPromise !== undefined) {
+        playPromise.then(() => {
+            console.log("🎵 Ancient music started");
+        }).catch(error => {
+            console.log("Ancient music error:", error);
+        });
+    }
+}
+
 function playFileClickSound() {
     // Don't play if glitch is active
-    if (glitchOverlay.classList.contains('glitch-active')) return;
+    if (glitchOverlay.classList.contains('glitch-active') || 
+        cozbiGlitchOverlay.style.display === 'flex' || 
+        ancientOverlay.style.display === 'block') return;
     
     fileClickAudio.currentTime = 0;
     fileClickAudio.volume = 0.3;
@@ -139,8 +184,10 @@ function playGlitchSound() {
 }
 
 function startBackgroundAudio() {
-    // Don't start if glitch is active
-    if (glitchOverlay.classList.contains('glitch-active')) return;
+    // Don't start if glitch or ancient overlays are active
+    if (glitchOverlay.classList.contains('glitch-active') || 
+        cozbiGlitchOverlay.style.display === 'flex' || 
+        ancientOverlay.style.display === 'block') return;
     
     backgroundAudio.currentTime = 0;
     backgroundAudio.volume = 0.4;
@@ -305,6 +352,81 @@ function triggerGlitchEffect() {
     }, 100);
 }
 
+// ==================== COZBI GLITCH EFFECT FUNCTIONS ====================
+
+function triggerCozbiGlitchEffect(file) {
+    console.log("🌌 Triggering COZBI glitch effect!");
+    
+    // Stop all audio
+    if (backgroundAudio) {
+        backgroundAudio.pause();
+        backgroundAudio.currentTime = 0;
+        backgroundAudio.volume = 0;
+    }
+    
+    // Hide main container
+    mainContainer.style.display = 'none';
+    
+    // Show COZBI glitch overlay
+    cozbiGlitchOverlay.style.display = 'flex';
+    
+    let currentStep = 0;
+    const totalSteps = cozbiGlitchMessages.length;
+    
+    function updateCozbiProgress() {
+        const progress = ((currentStep + 1) / totalSteps) * 100;
+        cozbiProgressFill.style.width = `${progress}%`;
+        cozbiGlitchMessage.textContent = cozbiGlitchMessages[currentStep];
+        
+        // Add glitch effect
+        cozbiGlitchMessage.classList.add('glitch');
+        setTimeout(() => {
+            cozbiGlitchMessage.classList.remove('glitch');
+        }, 300);
+        
+        currentStep++;
+        
+        if (currentStep < totalSteps) {
+            setTimeout(updateCozbiProgress, 1500);
+        } else {
+            // Sequence complete, show ancient content
+            setTimeout(() => {
+                cozbiGlitchOverlay.style.display = 'none';
+                showAncientContent(file);
+            }, 1500);
+        }
+    }
+    
+    // Start the sequence
+    setTimeout(updateCozbiProgress, 500);
+}
+
+function showAncientContent(file) {
+    console.log("🏛️ Showing ancient content");
+    
+    // Play ancient music
+    playAncientMusic();
+    
+    // Set ancient content
+    ancientOverlay.innerHTML = file.ancientContent;
+    
+    // Show ancient overlay
+    ancientOverlay.style.display = 'block';
+    
+    // Show close button
+    closeAncient.style.display = 'flex';
+    
+    // Set up close button
+    closeAncient.onclick = () => {
+        ancientOverlay.style.display = 'none';
+        closeAncient.style.display = 'none';
+        ancientMusic.pause();
+        ancientMusic.currentTime = 0;
+        mainContainer.style.display = 'block';
+        startBackgroundAudio();
+    };
+}
+
 // ==================== PROGRESS BAR FUNCTIONS ====================
 
 function initializeProgressBar() {
@@ -330,8 +452,13 @@ function initializeProgressBar() {
 function openFileModal(file) {
     // Check if this is the DAKA file
     if (file.isDaka) {
-        // Trigger the glitch effect instead of showing modal
         triggerGlitchEffect();
+        return;
+    }
+    
+    // Check if this is the COZBI file
+    if (file.isCozbi) {
+        triggerCozbiGlitchEffect(file);
         return;
     }
     
@@ -353,7 +480,8 @@ function getCategoryDisplayName(category) {
     const categoryMap = {
         'project-0': 'Project 0',
         'current-army': 'Current Army',
-        'corrupted': 'Corrupted'
+        'corrupted': 'Corrupted',
+        'origin': 'Origin'
     };
     return categoryMap[category] || category;
 }
@@ -393,7 +521,7 @@ function renderFiles(filesToRender) {
     
     filesToRender.forEach(file => {
         const fileCard = document.createElement('div');
-        fileCard.className = `file-card ${file.category} ${file.isDaka ? 'daka-file' : ''}`;
+        fileCard.className = `file-card ${file.category} ${file.isDaka ? 'daka-file' : ''} ${file.isCozbi ? 'cozbi-file' : ''}`;
         fileCard.innerHTML = `
             <div class="glow-effect"></div>
             <div class="classification">${file.classification}</div>
@@ -426,14 +554,16 @@ function renderFiles(filesToRender) {
     });
 }
 
-/// ==================== EVENT LISTENERS ====================
+// ==================== EVENT LISTENERS ====================
 
 function setupEventListeners() {
     // Category filter event listeners
     categoryItems.forEach(item => {
         item.addEventListener('click', () => {
-            // Don't respond if glitch is active
-            if (glitchOverlay.classList.contains('glitch-active')) return;
+            // Don't respond if glitch or ancient overlays are active
+            if (glitchOverlay.classList.contains('glitch-active') || 
+                cozbiGlitchOverlay.style.display === 'flex' || 
+                ancientOverlay.style.display === 'block') return;
             
             categoryItems.forEach(i => i.classList.remove('active'));
             item.classList.add('active');
@@ -444,8 +574,10 @@ function setupEventListeners() {
 
     // Search input event listener
     searchInput.addEventListener('input', (e) => {
-        // Don't respond if glitch is active
-        if (glitchOverlay.classList.contains('glitch-active')) return;
+        // Don't respond if glitch or ancient overlays are active
+        if (glitchOverlay.classList.contains('glitch-active') || 
+            cozbiGlitchOverlay.style.display === 'flex' || 
+            ancientOverlay.style.display === 'block') return;
         
         currentSearch = e.target.value.toLowerCase();
         filterFiles();
@@ -453,8 +585,10 @@ function setupEventListeners() {
 
     // Modal close handlers
     closeModal.addEventListener('click', () => {
-        // Don't respond if glitch is active
-        if (glitchOverlay.classList.contains('glitch-active')) return;
+        // Don't respond if glitch or ancient overlays are active
+        if (glitchOverlay.classList.contains('glitch-active') || 
+            cozbiGlitchOverlay.style.display === 'flex' || 
+            ancientOverlay.style.display === 'block') return;
         
         fileModal.style.display = 'none';
         playFileClickSound();
@@ -462,8 +596,10 @@ function setupEventListeners() {
 
     window.addEventListener('click', (e) => {
         if (e.target === fileModal) {
-            // Don't respond if glitch is active
-            if (glitchOverlay.classList.contains('glitch-active')) return;
+            // Don't respond if glitch or ancient overlays are active
+            if (glitchOverlay.classList.contains('glitch-active') || 
+                cozbiGlitchOverlay.style.display === 'flex' || 
+                ancientOverlay.style.display === 'block') return;
             
             fileModal.style.display = 'none';
             playFileClickSound();
@@ -473,30 +609,41 @@ function setupEventListeners() {
     // Escape key to close modal
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && fileModal.style.display === 'block') {
-            // Don't respond if glitch is active
-            if (glitchOverlay.classList.contains('glitch-active')) return;
+            // Don't respond if glitch or ancient overlays are active
+            if (glitchOverlay.classList.contains('glitch-active') || 
+                cozbiGlitchOverlay.style.display === 'flex' || 
+                ancientOverlay.style.display === 'block') return;
             
             fileModal.style.display = 'none';
             playFileClickSound();
         }
     });
 
-    // Audio interaction listeners - only if glitch is not active
+    // Audio interaction listeners - only if overlays are not active
     // AND only if background audio is not already playing
     document.addEventListener('click', function() {
-        if (!glitchOverlay.classList.contains('glitch-active') && backgroundAudio.paused) {
+        if (!glitchOverlay.classList.contains('glitch-active') && 
+            cozbiGlitchOverlay.style.display !== 'flex' && 
+            ancientOverlay.style.display !== 'block' && 
+            backgroundAudio.paused) {
             startBackgroundAudio();
         }
     });
     
     document.addEventListener('keydown', function() {
-        if (!glitchOverlay.classList.contains('glitch-active') && backgroundAudio.paused) {
+        if (!glitchOverlay.classList.contains('glitch-active') && 
+            cozbiGlitchOverlay.style.display !== 'flex' && 
+            ancientOverlay.style.display !== 'block' && 
+            backgroundAudio.paused) {
             startBackgroundAudio();
         }
     });
     
     document.addEventListener('mousemove', function() {
-        if (!glitchOverlay.classList.contains('glitch-active') && backgroundAudio.paused) {
+        if (!glitchOverlay.classList.contains('glitch-active') && 
+            cozbiGlitchOverlay.style.display !== 'flex' && 
+            ancientOverlay.style.display !== 'block' && 
+            backgroundAudio.paused) {
             startBackgroundAudio();
         }
     });

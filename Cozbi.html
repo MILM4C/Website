@@ -8,10 +8,26 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Glitch Overlay -->
+    <!-- Glitch Overlay for DAKA -->
     <div class="glitch-overlay" id="glitchOverlay">
         <div class="glitch-message" id="glitchMessage">I DON'T THINK SO</div>
     </div>
+    
+    <!-- Cozbi Glitch Overlay -->
+    <div class="cozbi-glitch-overlay" id="cozbiGlitchOverlay">
+        <div class="cozbi-glitch-message" id="cozbiGlitchMessage">ACCESSING GOLDEN AGE RECORDS...</div>
+        <div class="cozbi-progress">
+            <div class="cozbi-progress-fill" id="cozbiProgressFill"></div>
+        </div>
+    </div>
+    
+    <!-- Ancient Overlay for COZBI content -->
+    <div class="ancient-overlay" id="ancientOverlay">
+        <!-- Content will be inserted here by JavaScript -->
+    </div>
+    
+    <!-- Close button for ancient overlay -->
+    <button class="close-ancient" id="closeAncient">&times;</button>
     
     <div class="container" id="mainContainer">
         <header>
@@ -37,8 +53,8 @@
                     <li data-category="current-army">
                         <i class="fas fa-helmet-battle"></i> Current Army
                     </li>
-                    <li data-category="corrupted">
-                        <i class="fas fa-exclamation-triangle"></i> Corrupted
+                    <li data-category="origin">
+                        <i class="fas fa-eye"></i> Origin
                     </li>
                 </ul>
             </aside>
@@ -46,7 +62,7 @@
             <main class="main-content">
                 <div class="files-header">
                     <h2><i class="fas fa-file-alt"></i> Classified Files</h2>
-                    <div class="file-counter">Showing <span id="fileCount">3</span> files</div>
+                    <div class="file-counter">Showing <span id="fileCount">4</span> files</div>
                 </div>
                 
                 <div class="file-grid" id="fileContainer">
@@ -93,7 +109,7 @@
         </div>
         
         <footer class="footer">
-            <p>Children of Cozbi Archive • Classification Level: BLACK • All accesses logged</p>
+            <p>Children of Cozbi Archive • Classification Level: ∞ • All accesses logged</p>
         </footer>
     </div>
 
@@ -118,8 +134,8 @@
 
     <!-- Glitch Audio (short effect) -->
     <audio id="glitchAudio" style="display: none;">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-computer-glitch-2338.mp3" type="audio/mpeg">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-retro-game-emergency-alarm-1000.mp3" type="audio/mpeg">
+        <source src="Undertale Ost_ The Fallen Child.mp3" type="audio/mpeg">
+        <source src="Undertale Ost_ The Fallen Child.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
@@ -127,6 +143,13 @@
     <audio id="glitchMusic" loop style="display: none;">
         <source src="Undertale Ost_ The Fallen Child.mp3" type="audio/mpeg">
         <source src="Undertale Ost_ The Fallen Child.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Ancient Music (hidden) -->
+    <audio id="ancientMusic" loop style="display: none;">
+        <source src="Ancestry_320k.mp3" type="audio/mpeg">
+        <source src="Ancestry_320k.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 

@@ -193,6 +193,10 @@ h1 {
     animation: dakaPulse 2s infinite;
 }
 
+.file-card.cozbi-file {
+    border-left: 6px solid #8b0000 !important;
+}
+
 @keyframes dakaPulse {
     0% { box-shadow: 0 0 5px rgba(255, 0, 0, 0.3); }
     50% { box-shadow: 0 0 20px rgba(255, 0, 0, 0.6); }
@@ -214,10 +218,21 @@ h1 {
     animation: dakaIconPulse 1s infinite;
 }
 
+.cozbi-file .file-icon {
+    color: #8b0000;
+    animation: cozbiPulse 2s infinite;
+}
+
 @keyframes dakaIconPulse {
     0% { transform: scale(1); }
     50% { transform: scale(1.1); }
     100% { transform: scale(1); }
+}
+
+@keyframes cozbiPulse {
+    0% { transform: scale(1); filter: drop-shadow(0 0 5px #8b0000); }
+    50% { transform: scale(1.1); filter: drop-shadow(0 0 20px #8b0000); }
+    100% { transform: scale(1); filter: drop-shadow(0 0 5px #8b0000); }
 }
 
 .file-title {
@@ -232,6 +247,11 @@ h1 {
     text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
 }
 
+.cozbi-file .file-title {
+    color: #8b0000;
+    text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+}
+
 .file-desc {
     color: #888888;
     font-size: 1.05rem;
@@ -243,6 +263,10 @@ h1 {
 .daka-file .file-desc {
     color: #ff3333;
     font-style: italic;
+}
+
+.cozbi-file .file-desc {
+    color: #aaaaaa;
 }
 
 .file-meta {
@@ -280,6 +304,12 @@ h1 {
     background: #220000;
     color: #ff8888;
     border: 1px solid #ff0000;
+}
+
+.cozbi-file .file-tag {
+    background: rgba(139, 0, 0, 0.2);
+    color: #ff4444;
+    border: 1px solid #8b0000;
 }
 
 .footer {
@@ -441,6 +471,12 @@ h1 {
     border: 1px solid #ff0000;
 }
 
+.cozbi-file .classification {
+    background: rgba(139, 0, 0, 0.2);
+    color: #ff4444;
+    border: 1px solid #8b0000;
+}
+
 .glow-effect {
     position: absolute;
     width: 100%;
@@ -459,6 +495,10 @@ h1 {
 
 .daka-file:hover .glow-effect {
     background: radial-gradient(circle at center, rgba(255, 0, 0, 0.3) 0%, transparent 70%);
+}
+
+.cozbi-file:hover .glow-effect {
+    background: radial-gradient(circle at center, rgba(139, 0, 0, 0.3) 0%, transparent 70%);
 }
 
 /* Modal Styles */
@@ -733,4 +773,292 @@ h1 {
 @keyframes scramble {
     0% { left: -100%; }
     100% { left: 100%; }
+}
+
+/* ===== DARK THEME FOR COZBI FILE ===== */
+.ancient-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #0a0a0a, #000000, #0a0a0a);
+    z-index: 10000;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.ancient-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 40px;
+    background: rgba(10, 10, 10, 0.98);
+    border: 3px solid #8b0000;
+    border-radius: 0;
+    box-shadow: 0 0 50px rgba(139, 0, 0, 0.5),
+                inset 0 0 30px rgba(139, 0, 0, 0.2);
+    position: relative;
+    font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.ancient-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 20%, rgba(139, 0, 0, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(100, 0, 0, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.ancient-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #8b0000;
+}
+
+.ancient-symbol {
+    font-size: 4rem;
+    color: #8b0000;
+    margin: 0 30px;
+    filter: drop-shadow(0 0 10px rgba(139, 0, 0, 0.7));
+    text-shadow: 0 0 20px rgba(139, 0, 0, 0.9);
+}
+
+.ancient-header h1 {
+    font-size: 3rem;
+    color: #8b0000;
+    text-align: center;
+    text-shadow: 0 0 20px rgba(139, 0, 0, 0.7),
+                 0 0 40px rgba(139, 0, 0, 0.3);
+    letter-spacing: 3px;
+    margin: 0;
+    font-weight: normal;
+}
+
+.ancient-divider {
+    text-align: center;
+    color: #8b0000;
+    font-size: 1.5rem;
+    margin: 40px 0;
+    padding: 20px 0;
+    border-top: 1px solid rgba(139, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(139, 0, 0, 0.3);
+    letter-spacing: 5px;
+    opacity: 0.8;
+}
+
+.ancient-content {
+    color: #cccccc;
+    line-height: 1.8;
+}
+
+.ancient-section {
+    margin-bottom: 50px;
+}
+
+.ancient-section h2 {
+    color: #8b0000;
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 30px;
+    text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(139, 0, 0, 0.2);
+    padding-bottom: 10px;
+}
+
+.ancient-text {
+    font-size: 1.3rem;
+    margin-bottom: 25px;
+    text-align: justify;
+    color: #bbbbbb;
+}
+
+.ancient-text strong {
+    color: #8b0000;
+}
+
+.ancient-law {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: rgba(139, 0, 0, 0.05);
+    border-left: 3px solid #8b0000;
+    border-radius: 5px;
+}
+
+.law-symbol {
+    font-size: 2.5rem;
+    color: #8b0000;
+    margin-right: 20px;
+    min-width: 60px;
+    text-align: center;
+    filter: drop-shadow(0 0 5px rgba(139, 0, 0, 0.5));
+}
+
+.law-text {
+    flex: 1;
+    font-size: 1.2rem;
+    color: #cccccc;
+}
+
+.law-text strong {
+    color: #8b0000;
+    font-size: 1.3rem;
+}
+
+.manifestation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.manifestation {
+    background: rgba(139, 0, 0, 0.07);
+    padding: 25px;
+    border: 1px solid rgba(139, 0, 0, 0.2);
+    text-align: center;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+}
+
+.manifestation:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(139, 0, 0, 0.3);
+    border-color: #8b0000;
+    background: rgba(139, 0, 0, 0.1);
+}
+
+.manifest-symbol {
+    font-size: 3rem;
+    color: #8b0000;
+    margin-bottom: 15px;
+    filter: drop-shadow(0 0 10px rgba(139, 0, 0, 0.5));
+}
+
+.manifestation h3 {
+    color: #8b0000;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    text-shadow: 0 0 5px rgba(139, 0, 0, 0.3);
+}
+
+.manifestation p {
+    color: #aaaaaa;
+    font-size: 1.1rem;
+}
+
+.warning-section {
+    background: rgba(139, 0, 0, 0.1);
+    padding: 40px;
+    border: 2px solid #8b0000;
+    margin-top: 40px;
+    border-radius: 10px;
+    box-shadow: inset 0 0 20px rgba(139, 0, 0, 0.2);
+}
+
+.warning-title {
+    color: #ff0000 !important;
+    text-shadow: 0 0 15px rgba(255, 0, 0, 0.5) !important;
+}
+
+.ancient-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+    padding-top: 30px;
+    border-top: 1px solid rgba(139, 0, 0, 0.3);
+}
+
+.seal {
+    font-size: 3rem;
+    color: #8b0000;
+    margin: 0 20px;
+    filter: drop-shadow(0 0 10px rgba(139, 0, 0, 0.7));
+}
+
+.seal-text {
+    color: #aaaaaa;
+    font-size: 1.2rem;
+    font-style: italic;
+    text-align: center;
+}
+
+/* Cozbi glitch overlay */
+.cozbi-glitch-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 9998;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.cozbi-glitch-message {
+    font-size: 3rem;
+    color: #8b0000;
+    text-align: center;
+    text-shadow: 0 0 20px #8b0000;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    letter-spacing: 3px;
+    margin-bottom: 30px;
+}
+
+.cozbi-progress {
+    width: 80%;
+    max-width: 600px;
+    height: 20px;
+    background: #111;
+    border: 1px solid #8b0000;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.cozbi-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #8b0000, #ff0000);
+    width: 0%;
+    transition: width 1s ease-in-out;
+}
+
+/* Close button for ancient overlay */
+.close-ancient {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background: rgba(139, 0, 0, 0.2);
+    border: 2px solid #8b0000;
+    color: #8b0000;
+    font-size: 2rem;
+    cursor: pointer;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10001;
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+
+.close-ancient:hover {
+    background: rgba(139, 0, 0, 0.4);
+    transform: rotate(90deg);
 }
